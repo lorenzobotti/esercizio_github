@@ -1,6 +1,12 @@
-# PHP: Introduzione a SQL e MySQLi
+# PHP: Introduzione a MySQL e PDO
 
-MySQLi è una libreria per semplificare la connessione e l'uso di MySQL tramite PHP. Spesso arriva già installata con PHP, in XAMPP è preinstallata. Si può usare in due modi: usando un paradigna procedurale (stile C) o a oggetti (stile Java e C++)
+- [PHP: Introduzione a MySQL e PDO](#php-introduzione-a-mysql-e-pdo)
+  - [Connettersi al database](#connettersi-al-database)
+  - [Eseguire una query](#eseguire-una-query)
+  - [Eseguire una query che restituisce una tabella](#eseguire-una-query-che-restituisce-una-tabella)
+  - [Query con parametri](#query-con-parametri)
+
+PDO (PHP Data Objects) è lo standard de facto per accedere a un DBMS relazionale da PHP. PDO definisce un'interfaccia comune per comunicare con vari DBMS come MySQL, PostgreSQL, SQLite e molti altri
 
 ## Connettersi al database
 Spesso i DBMS sono servizi separati dal nostro programma, perciò per farne uso dal nostro codice dobbiamo effettivamente connetterci a MySQL come se fosse un servizio web.
@@ -73,21 +79,21 @@ L'SQL Injection è una forma di attacco informatico che consiste nel inserire ca
 ![Bobby tables](https://imgs.xkcd.com/comics/exploits_of_a_mom.png "Bobby tables")
 
 ```
-// Sostuisco le variabili nella query con dei placeholders
-// Così da trattare i valori inviati come dati, non come istruzioni
+// preparo la query
+$stmt = $mysqli -> prepare("INSERT INTO Utenti (username, password, email) VALUES (?, ?, ?)");
+//questi parametri sono passati per riferimento, non per valore
+//ciò fa in modo che posso rifare la query senza richiamare bind_param()
+//ma attenti!
+$stmt -> bind_param("sss", $username, $password, $email);
 
-// Si passa da questo (query con variabili - invio istruzioni):
-$sql = "SELECT * FROM users WHERE email = '$email' AND status='$status'";
+// imposta i parametri
+// notare che facciamo questa cosa dopo averli già passati a bind_param()
+// perché sono passati per riferimento
+$username = "mammamia";
+$password = "marcello";
+$email = "mario@example.com";
 
-// A questo (query con placeholders - invio dati):
-$sql = 'SELECT * FROM users WHERE email = ? AND status=?';
-
-// In sostanza:
-
-// Preparo la query
-$stmt = $pdo->prepare($sql);
-
-// La eseguo passando i parmetri
-$stmt->execute([$email, $status]);
+//eseguo la query
+$stmt -> execute();
 ```
 Bravo! Adesso sei un esperto di MySQL, puoi hackerare la NASA, eccetera. Clicca qui per imparare [l'SQL](Link da inserire "Pagina sql") adesso!
