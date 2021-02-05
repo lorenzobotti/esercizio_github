@@ -1,8 +1,17 @@
 # Introduzione a SQL
 
+- [Introduzione a SQL](#introduzione-a-sql)
+    - [Creare, usare e rimuovere un database](#creare-usare-e-rimuovere-un-database)
+    - [Creare e rimuovere tabelle](#creare-e-rimuovere-tabelle)
+    - [Inserire righe in una tabella](#inserire-righe-in-una-tabella)
+    - [Selezionare dati da una tabella](#selezionare-dati-da-una-tabella)
+    - [Modificare e rimuovere righe](#modificare-e-rimuovere-righe)
+    - [L'arma segreta di SQL: le join](#larma-segreta-di-sql-le-join)
+    - [Relazioni](#relazioni)
+
 SQL (Structured Query Language) è un linguaggio che permette di comunicare con un DBMS (DataBase Management System). Sebbene dovrebbe essere implementation-independent (dovrebbe essere lo stesso per tutti i DBMS) spesso ogni DBMS aggiunge le proprie modifiche. Per esempio, PostreSQL aggiunge molti tipi di dato molto utili, tipo uno apposta per gli indirizzi ip, località geografiche, testo JSON, eccetera.
 
-Ogni query SQL è costituita da parole chiave riservate dal linguaggio (tipo `CREATE`, `SELECT` eccetera), nomi di database, tabelle e campi (spesso denotati con i backticks ``` ma non per forza) e valori (nelle query che inseriscono valori tipo `INSERT INTO`).  
+Ogni query SQL è costituita da parole chiave riservate dal linguaggio (tipo `CREATE`, `SELECT` eccetera), nomi di database, tabelle e campi (spesso denotati con i backticks (\`\`) ma non per forza) e valori (nelle query che inseriscono valori tipo `INSERT INTO`).  
 I commenti cominciano con due trattini: `--`.  
 Ogni query SQL deve terminare con il punto e virgola: `;`.
 
