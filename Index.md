@@ -24,9 +24,9 @@ try {
         echo "Errore: " . $e->getMessage();
         die();
     }
-
+```   
 ## **Eseguire una query**
-```     
+```  
 $sql = "INSERT INTO Utenti (username, password, email)
 VALUES ('Giovanni', '1234', 'giovanni@example.com')";
 
