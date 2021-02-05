@@ -11,37 +11,19 @@ MySQLi è una libreria per semplificare la connessione e l'uso di MySQL tramite 
 ## **Connettersi al database**
 Spesso i DBMS sono servizi separati dal nostro programma, perciò per farne uso dal nostro codice dobbiamo effettivamente connetterci a MySQL come se fosse un servizio web.
 
-Metodo a oggetti:
+Metodo PDO:
 ```
-$servername = "localhost";
-$username = "username";
-$password = "password";
-
-// Apri una connessione
-$conn = new mysqli($servername, $username, $password);
-
-// Controlla per errori
-if ($conn->connect_error) {
-die("Connessione fallita: " . $conn->connect_error);
-}
-echo "Connesso con successo";
-```
-Metodo procedurale:
-```
-$servername = "localhost";
-$username = "username";
-$password = "password";
-
-// Create connection
-$conn = mysqli_connect($servername, $username, $password);
-
-// Check connection
-if (!$conn) {
-die("Connessione fallita: " . mysqli_connect_error());
-}
-echo "Connesso con successo";
-```
-In questa guida ci sofferemeremo sulle funzioni a oggetti fornite da MySQLi
+try {
+        $hostname = "localhost";
+        $dbname = "nome_database";
+        $user = "nome_utente";
+        $pass = "password";
+        // Apri una connessione
+        $db = new PDO ("mysql:host=$hostname;dbname=$dbname", $user, $pass);
+    } catch (PDOException $e) { // Controllo per errori
+        echo "Errore: " . $e->getMessage();
+        die();
+    }
 
 ## **Eseguire una query**
 ```     
