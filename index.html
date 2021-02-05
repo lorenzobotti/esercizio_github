@@ -30,38 +30,19 @@
         Spesso i DBMS sono servizi separati dal nostro programma, perciò per farne uso dal nostro codice dobbiamo 
         effettivamente connetterci a MySQL come se fosse un servizio web.
     </p>
-    <h5>Metodo a oggetti:</h5>
+    <h5>Metodo PDO:</h5>
     <pre>
-$servername = "localhost";
-$username = "username";
-$password = "password";
-
-// Apri una connessione
-$conn = new mysqli($servername, $username, $password);
-
-// Controlla per errori
-if ($conn->connect_error) {
-die("Connessione fallita: " . $conn->connect_error);
-}
-echo "Connesso con successo";</pre>
-
-    <h5>Metodo procedurale:</h5>
-    <pre>
-$servername = "localhost";
-$username = "username";
-$password = "password";
-
-// Create connection
-$conn = mysqli_connect($servername, $username, $password);
-
-// Check connection
-if (!$conn) {
-die("Connessione fallita: " . mysqli_connect_error());
-}
-echo "Connesso con successo";</pre>
-
-    <p>In questa guida ci sofferemeremo sulle funzioni a oggetti fornite da MySQLi</p>
-
+    try {
+        $hostname = "localhost";
+        $dbname = "nome_database";
+        $user = "nome_utente";
+        $pass = "password";
+        // Apri una connessione
+        $db = new PDO ("mysql:host=$hostname;dbname=$dbname", $user, $pass);
+    } catch (PDOException $e) { // Controllo per errori
+        echo "Errore: " . $e->getMessage();
+        die();
+    }
     <h3 id="sezione-2">Eseguire una query</h3>
     <pre>
         
@@ -92,7 +73,7 @@ $risultato = $conn->query($sql);
 
 if ($risultato->num_rows > 0) {
 // Stampa i dati di ogni riga
-while($riga = $risultato->fetch_assoc()) {
+while($riga = $risultato->fetch()) {
     echo "id: " . $riga["id"]. " - Name: " . $riga["username"]. " " . $riga["email"]. "\n";
 }
 } else {
