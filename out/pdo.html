@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>PHP&colon; Introduzione a MySQL e PDO</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://fonts.xz.style/serve/inter.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@exampledev/new.css@1.1.2/new.min.css">
+    </head>
+    <body class="vscode-body vscode-light">
+        <h1 id="php-introduzione-a-mysql-e-pdo">PHP: Introduzione a MySQL e PDO</h1>
+<ul>
+<li><a href="#php-introduzione-a-mysql-e-pdo">PHP: Introduzione a MySQL e PDO</a>
+<ul>
+<li><a href="#connettersi-al-database">Connettersi al database</a></li>
+<li><a href="#eseguire-una-query">Eseguire una query</a></li>
+<li><a href="#eseguire-una-query-che-restituisce-una-tabella">Eseguire una query che restituisce una tabella</a></li>
+<li><a href="#query-con-parametri">Query con parametri</a></li>
+</ul>
+</li>
+</ul>
+<p>PDO (PHP Data Objects) è lo standard de facto per accedere a un DBMS relazionale da PHP. PDO definisce un'interfaccia comune per comunicare con vari DBMS come MySQL, PostgreSQL, SQLite e molti altri</p>
+<h2 id="connettersi-al-database">Connettersi al database</h2>
+<p>Spesso i DBMS sono servizi separati dal nostro programma, perciò per farne uso dal nostro codice dobbiamo effettivamente connetterci a MySQL come se fosse un servizio web.</p>
+<pre><code><code><div>try {
+    $hostname = &quot;localhost&quot;;
+    $dbname = &quot;nome_database&quot;;
+    $user = &quot;nome_utente&quot;;
+    $pass = &quot;password&quot;;
+    // Apri una connessione
+    $db = new PDO (&quot;mysql:host=$hostname;dbname=$dbname&quot;, $user, $pass);
+} catch (PDOException $e) {
+    // Controllo per errori
+    echo &quot;Errore: &quot; . $e-&gt;getMessage();
+    die();
+}
+</div></code></code></pre>
+<h2 id="eseguire-una-query">Eseguire una query</h2>
+<p>Se la query che vogliamo eseguire non restituisce una tabella, il metodo query() ritorna un semplice booleano, <code>true</code> in caso di successo e  <code>false</code> in caso di errore</p>
+<pre><code><code><div>$sql = &quot;INSERT INTO Utenti (username, password, email)
+VALUES ('Giovanni', '1234', 'giovanni@example.com')&quot;;
+
+if ($conn-&gt;query($sql) === TRUE) {
+    echo &quot;Record scritto correttamente&quot;;
+} else {
+    echo &quot;Errore: &quot; . $sql . &quot; &quot; . $conn-&gt;error;
+}
+
+$conn-&gt;close();
+</div></code></code></pre>
+<h2 id="eseguire-una-query-che-restituisce-una-tabella">Eseguire una query che restituisce una tabella</h2>
+<p>Una query che restituisce una tabella (tipo &quot;SELECT&quot;) invece restituisce un oggetto PDOStatement. Questo oggetto ha una funzione fetch() che ogni volta che viene chiamata restituisce una riga diversa. Questa riga viene rappresentata come un array con indici stringa (in linguaggi che hanno senso si chiamano &quot;dizionari&quot;). La riga <code>while($riga = $risultato-&gt;fetch())</code> fa in modo che il contenuto di quel ciclo while venga eseguito per ogni riga.</p>
+<pre><code><code><div>$sql = &quot;SELECT * FROM Utenti&quot;;
+$risultato = $conn-&gt;query($sql);
+
+if ($risultato-&gt;numRows() &gt; 0) {
+    // Stampa i dati di ogni riga
+    while($riga = $risultato-&gt;fetch()) {
+        echo &quot;id: &quot; . $riga[&quot;id&quot;]. &quot; - Name: &quot; . $riga[&quot;username&quot;]. &quot; &quot; . $riga[&quot;email&quot;]. &quot;\n&quot;;
+    }
+} else {
+    echo &quot;0 risultati&quot;;
+}
+</div></code></code></pre>
+<p>Per esempio, ecco cosa succede quando eseguo la stessa query direttamente nel DBMS</p>
+<pre><code><code><div>mysql&gt; SELECT * FROM utenti;
++-----------+----------+------------+------------------+-----------------------------------------+
+| id_utente | username | password   | nome_pubblico    | biografia                               |
++-----------+----------+------------+------------------+-----------------------------------------+
+|         1 | mathik   | burger     | Lorenzo Botti    | Ciao, sono Lorenzo Botti                |
+|         2 | test1    | canemagico | Giovanni Giorgio | Questo utente esiste davvero ;)         |
+|         3 | test2    | bbb        | Orazio           | carpe diem quam minimum credero postero |
+|         4 | marcello | bbb        | Jimi Hendrix     | Dove ho messo la chitarra?              |
+|         7 | claire   | bbb        | Claire           | fan di questo sito                      |
++-----------+----------+------------+------------------+-----------------------------------------+
+</div></code></code></pre>
+<h2 id="query-con-parametri">Query con parametri</h2>
+<p>L'SQL Injection è una forma di attacco informatico che consiste nel inserire caratteri interpretabili da MySQL in una stringa che si manda al server, in modo tale da ingannare il server a eseguire codice mandato dall'utente. Possiamo difenderci da questo attacco sanificando l'input che inseriamo nel database o usando <strong>query parametrizzate</strong> Questo famoso fumetto di <a href="https://xkcd.com/" title="Xkcd site">xkcd</a> rappresenta più o meno l'attacco.</p>
+<p><img src="https://imgs.xkcd.com/comics/exploits_of_a_mom.png" alt="Bobby tables" title="Bobby tables"></p>
+<pre><code><code><div>// preparo la query
+$stmt = $mysqli -&gt; prepare(&quot;INSERT INTO Utenti (username, password, email) VALUES (?, ?, ?)&quot;);
+//questi parametri sono passati per riferimento, non per valore
+//ciò fa in modo che posso rifare la query senza richiamare bind_param()
+//ma attenti!
+$stmt -&gt; bind_param(&quot;sss&quot;, $username, $password, $email);
+
+// imposta i parametri
+// notare che facciamo questa cosa dopo averli già passati a bind_param()
+// perché sono passati per riferimento
+$username = &quot;mammamia&quot;;
+$password = &quot;marcello&quot;;
+$email = &quot;mario@example.com&quot;;
+
+//eseguo la query
+$stmt -&gt; execute();
+</div></code></code></pre>
+<p>Bravo! Adesso sei un esperto di MySQL, puoi hackerare la NASA, eccetera. Clicca <a href="sql.html">qui</a> per imparare l'SQL adesso!</p>
+
+    </body>
+    </html>
