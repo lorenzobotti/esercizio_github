@@ -94,4 +94,4 @@ $stmt = $pdo->prepare($sql);
 // La eseguo passando i parmetri
 $stmt->execute([$email, $status]);
 ```
-Bravo! Adesso sei un esperto di MySQL, puoi hackerare la NASA, eccetera. Clicca qui per imparare [l'SQL](Link da inserire "Pagina sql") adesso!
+Bravo! Ora sei un esperto di MySQL, puoi hackerare la NASA, eccetera. Clicca qui per imparare [l'SQL](Link da inserire "Pagina sql") ORA!
