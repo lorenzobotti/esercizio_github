@@ -81,6 +81,7 @@ L'SQL Injection è una forma di attacco informatico che consiste nel inserire ca
 ```
 // Sostuisco le variabili nella query con dei placeholders
 // Così da trattare i valori inviati come dati, non come istruzioni
+
 // Si passa da questo (query con variabili - invio istruzioni):
 $sql = "SELECT * FROM users WHERE email = '$email' AND status='$status'";
 
@@ -88,10 +89,11 @@ $sql = "SELECT * FROM users WHERE email = '$email' AND status='$status'";
 $sql = 'SELECT * FROM users WHERE email = ? AND status=?';
 
 // In sostanza:
+
 // Preparo la query
 $stmt = $pdo->prepare($sql);
 
 // La eseguo passando i parmetri
 $stmt->execute([$email, $status]);
 ```
-Bravo! Adesso sei un esperto di MySQL, puoi hackerare la NASA, eccetera. Clicca qui per imparare [l'SQL](Link da inserire "Pagina sql") adesso!
+Bravo! Ora sei un esperto di MySQL, puoi hackerare la NASA, eccetera. Clicca qui per imparare [l'SQL](Link da inserire "Pagina sql") ORA!
