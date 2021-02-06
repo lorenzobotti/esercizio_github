@@ -79,21 +79,19 @@ L'SQL Injection è una forma di attacco informatico che consiste nel inserire ca
 ![Bobby tables](https://imgs.xkcd.com/comics/exploits_of_a_mom.png "Bobby tables")
 
 ```
-// preparo la query
-$stmt = $mysqli -> prepare("INSERT INTO Utenti (username, password, email) VALUES (?, ?, ?)");
-//questi parametri sono passati per riferimento, non per valore
-//ciò fa in modo che posso rifare la query senza richiamare bind_param()
-//ma attenti!
-$stmt -> bind_param("sss", $username, $password, $email);
+// Sostuisco le variabili nella query con dei placeholders
+// Così da trattare i valori inviati come dati, non come istruzioni
+// Si passa da questo (query con variabili - invio istruzioni):
+$sql = "SELECT * FROM users WHERE email = '$email' AND status='$status'";
 
-// imposta i parametri
-// notare che facciamo questa cosa dopo averli già passati a bind_param()
-// perché sono passati per riferimento
-$username = "mammamia";
-$password = "marcello";
-$email = "mario@example.com";
+// A questo (query con placeholders - invio dati):
+$sql = 'SELECT * FROM users WHERE email = ? AND status=?';
 
-//eseguo la query
-$stmt -> execute();
+// In sostanza:
+// Preparo la query
+$stmt = $pdo->prepare($sql);
+
+// La eseguo passando i parmetri
+$stmt->execute([$email, $status]);
 ```
 Bravo! Adesso sei un esperto di MySQL, puoi hackerare la NASA, eccetera. Clicca qui per imparare [l'SQL](Link da inserire "Pagina sql") adesso!
